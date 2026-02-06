@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-first-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /                 # Если пользователь пришел в "корень" сайта
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service # Отправь его в этот сервис
+            port:
+              number: 80        # На ВНУТРЕННИЙ порт сервиса (не 30007, а 80!)

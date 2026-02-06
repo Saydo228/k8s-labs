@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service           # Тип объекта: Сервис
+metadata:
+  name: nginx-service   # Имя сервиса
+spec:
+  type: NodePort        # ТИП: Открыть порт наружу
+  selector:             # КОГО искать?
+    app: nginx-test     # Ищи поды с этой биркой (мы вешали её в прошлом шаге)
+  ports:
+    - port: 80          # Порт внутри Сервиса (виртуальный)
+      targetPort: 80    # Порт на самом Поде (куда пересылать)
+      nodePort: 30007   # Порт на СТЕНЕ СЕРВЕРА (внешний)

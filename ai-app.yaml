@@ -1,0 +1,54 @@
+# 1. DEPLOYMENT (Запуск приложения)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-backend
+spec:
+  replicas: 3               # Запустим сразу 3 копии! (Load Balancing)
+  selector:
+    matchLabels:
+      app: my-ai-app        # Новая бирка
+  template:
+    metadata:
+      labels:
+        app: my-ai-app
+    spec:
+      containers:
+      - name: python-ai
+        image: saydo228/my-ai-service:v3  # ТВОЙ ОБРАЗ С DOCKER HUB
+        ports:
+        - containerPort: 5000             # ВАЖНО: Твой Python слушает 5000
+
+---
+
+# 2. SERVICE (Внутренняя сеть)
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+spec:
+  type: ClusterIP          # Обычный внутренний сервис (без дырок в стене)
+  selector:
+    app: my-ai-app         # Ищем поды с этой биркой
+  ports:
+    - port: 80             # Виртуальный порт Сервиса (внутри кластера)
+      targetPort: 5000     # Реальный порт Пода (куда пересылать)
+
+---
+
+# 3. INGRESS (Входная дверь)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-service  # Шлем трафик в сервис
+            port:
+              number: 80      # На виртуальный порт сервиса

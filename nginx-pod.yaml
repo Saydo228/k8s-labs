@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod             # Что создаем? Под.
+metadata:
+  name: my-first-pod  # Как назовем?
+  labels:
+    app: nginx-test   # Бирка (как ценник в магазине), пригодится позже
+spec:                 # Спецификация (ТТХ)
+  containers:
+    - name: nginx     # Имя контейнера внутри пода
+      image: nginx:latest  # Образ (как в Docker)
+      ports:
+        - containerPort: 80

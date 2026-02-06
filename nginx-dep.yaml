@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-test
+  template:
+    metadata:
+      labels:
+        app: nginx-test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        # --- ДОБАВЛЯЕМ ЭТО ---
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html" # Куда монтируем (папка сайта Nginx)
+          name: my-storage                   # Имя из секции volumes ниже
+      # --- И ЭТО ---
+      volumes:
+      - name: my-storage
+        persistentVolumeClaim:
+          claimName: my-data-pvc             # Ссылка на наш PVC

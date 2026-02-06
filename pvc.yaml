@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim   # Заявка на том
+metadata:
+  name: my-data-pvc           # Имя заявки
+spec:
+  accessModes:
+    - ReadWriteOnce           # Читать и писать может только одна нода
+  resources:
+    requests:
+      storage: 1Gi            # Дай мне 1 Гигабайт
